@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 365.5
+    "width": 365.5,
+    "collapsed": true
   },
   "right": {
     "id": "71afa7be52686021",
@@ -166,8 +167,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -181,8 +181,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "739f8e275473f3fe",
+  "active": "dced3e01c3435a2d",
   "lastOpenFiles": [
+    "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-bias-comp.png",
+    "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-size-comp.png",
+    "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-1-result.png",
     "Beyond Size and Accuracy The Impact of Model Compression/~~$Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/processed_COMPAS_dataset.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/bias_function.png",
@@ -197,7 +200,6 @@
     "Papers/Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Papers/BadAgent Inserting and Activating Backdoor Attacks in LLM Agents.pdf",
     "Papers/Addressing Bias and Fairness Using Fair Federated Learning - A Synthetic Review.pdf",
-    "Mlsys FL Compression Fairness Proposal.pdf",
     "Z Notes/Model Compression/1. RoadMap.md",
     "Untitled.canvas",
     "BadAgent Inserting and Activating Attacks in LLM Agents/Lit Review.md",
