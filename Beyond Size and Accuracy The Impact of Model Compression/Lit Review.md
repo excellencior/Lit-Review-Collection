@@ -10,5 +10,6 @@ How different methods of Model Compression impact the **fairness/bias** of a mod
 ### Fairness Metrics Used
 - Equalized Odds \
   Considers a model to be fair if the subgroups have equal sensitivity (TPR) and specificity (1 - FPR).
-- Bias Function \ ![bias_function](assets/bias_function.png)
+- Bias Function \
+  ![bias_function](assets/bias_function.png)
 
