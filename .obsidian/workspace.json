@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 365.5,
-    "collapsed": true
+    "width": 365.5
   },
   "right": {
     "id": "71afa7be52686021",
@@ -184,6 +183,7 @@
   },
   "active": "739f8e275473f3fe",
   "lastOpenFiles": [
+    "Beyond Size and Accuracy The Impact of Model Compression/~~$Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/processed_COMPAS_dataset.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/bias_function.png",
     "Beyond Size and Accuracy The Impact of Model Compression/Beyond Size and Accuracy The Impact of Model Compression.pdf",

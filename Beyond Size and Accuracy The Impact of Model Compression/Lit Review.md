@@ -37,3 +37,7 @@ Pruned to various sparsity levels to examine it's impact on fairness.
 2. Pruning with different levels of sparsity \
    Pruning enables variability in model's sparsity. Sparsity levels: **50%, 60%, 70%, 80%, 90%**. \
    Baseline vs. M<sub>q</sub> vs. (M<sub>p</sub> at **80%** sparsity)
+
+## Conclusion
+- **Quantization** exhibited potential for improving model fairness, while **pruning** appeared to increase bias.
+- Bias tends to increase as model sparsity increases.
