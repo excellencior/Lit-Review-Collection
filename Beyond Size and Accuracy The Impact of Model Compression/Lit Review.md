@@ -45,7 +45,7 @@ Pruned to various sparsity levels to examine it's impact on fairness.
 - Exp-2 \
   ![exp-2-size-comparison](assets/exp-2-size-comp.png) \
   ![exp-2-bias-comparison](assets/exp-2-bias-comp.png) \
-  Slight drop in accuracy from the baseline to **50% sparsity** (84.74% - 84.02% for gender, 83.59% - 82.4% for race, and 84.6% - 82.64% for age
+	- Slight drop in accuracy from the baseline to **50% sparsity** (84.74% - 84.02% for gender, 83.59% - 82.4% for race, and 84.6% - 82.64% for age
 
 ## Conclusion
 - **Quantization** exhibited potential for improving model fairness, while **pruning** appeared to increase bias.
