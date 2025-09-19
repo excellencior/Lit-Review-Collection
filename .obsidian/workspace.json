@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 365.5
+    "width": 365.5,
+    "collapsed": true
   },
   "right": {
     "id": "71afa7be52686021",
@@ -166,7 +167,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 224.5
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -180,8 +181,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "b0b0ee92efa190a1",
+  "active": "739f8e275473f3fe",
   "lastOpenFiles": [
+    "Beyond Size and Accuracy The Impact of Model Compression/assets/bias_function.png",
     "Beyond Size and Accuracy The Impact of Model Compression/Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Z Notes/Model Compression/2. BaseNote.md",
     "Beyond Size and Accuracy The Impact of Model Compression/Lit Review.md",
@@ -195,7 +197,6 @@
     "Papers/Addressing Bias and Fairness Using Fair Federated Learning - A Synthetic Review.pdf",
     "Mlsys FL Compression Fairness Proposal.pdf",
     "Z Notes/Model Compression/1. RoadMap.md",
-    "Unconfirmed 459239.crdownload",
     "Untitled.canvas",
     "BadAgent Inserting and Activating Attacks in LLM Agents/Lit Review.md",
     "GLaM Efficient Scaling of Language Models with Mixture-of-Experts/Lit Review.md",
