@@ -2,7 +2,7 @@
 
 ### Datasets Used
 - COMPAS Recidivism Racial Bias Dataset
-- Post-processing, \
+- Post-processing \
   ![post-processed-COMPAS-dataset-used](assets/processed_COMPAS_dataset.png)
 
 ### Impact Factors
