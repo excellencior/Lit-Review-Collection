@@ -1,4 +1,4 @@
-How different methods of Model Compression impact the **fairness/bias** of a model?
+# How different methods of Model Compression impact the **fairness/bias** of a model?
 
 ### Datasets Used
 - COMPAS Recidivism Racial Bias Dataset
