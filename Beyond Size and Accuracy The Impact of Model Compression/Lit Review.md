@@ -27,4 +27,13 @@ How different methods of Model Compression impact the **fairness/bias** of a mod
 - Quantization
 	- QAT
 - Pruning
-	- **Weight Pruning** with the magnitude pruner, which applies a threshold function on each weight tensor to preserve weights with 
+	- **Weight Pruning** with the magnitude pruner, which applies a threshold function on each weight tensor to preserve weights with high absolute values
+
+Pruned to various sparsity levels to examine it's impact on fairness.
+
+### Experiments
+1. Compressed vs. Baseline \
+   Baseline vs. M<sub>q</sub> vs. (M<sub>p</sub> at **80%** sparsity)
+2. Pruning with different levels of sparsity \
+   Pruning enables variability in model's sparsity. Sparsity levels: **50%, 60%, 70%, 80%, 90%**. \
+   Baseline vs. M<sub>q</sub> vs. (M<sub>p</sub> at **80%** sparsity)
