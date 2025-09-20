@@ -38,7 +38,7 @@
   ICAT (Idealized Context Association Test) score = LMS (Language Model Score) + SS (Stereotype Score). S.T. it is maximized when the model is unbiased and proficient in language modeling. \
   ![ICAT-score-equation](assets/ICAT-score-eq.png)
 - **CrowS-Pairs** \
-  Crowdsourced dataset that allows to observ
+  Crowdsourced dataset that allows to observe bias along the dimensions of gender, race and religion. The distance between the stereotype and anti-stereotype pairs is kept to a minimum, and the metric involves the pseudo-log likelihood scoring mechanism from Salazar et al. (2020).
 
 
 ## Takes
