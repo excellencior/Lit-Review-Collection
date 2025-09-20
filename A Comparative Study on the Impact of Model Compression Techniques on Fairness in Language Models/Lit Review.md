@@ -30,7 +30,16 @@
 - **Intrinsic** \
   Evaluates bias in the pre-trained representations of LMs. s.a. in the static and contexualized embedding spaces.
 - **Extrinsic** \
-  
+  Estimates bias in the outputs produced by the LLM in the downstream tasks as it is fine-tuned for.
+
+### Datasets Used
+- **StereoSet** \
+  “stereotypical” refers to the biased option that reinforces social stereotypes. \
+  ICAT (Idealized Context Association Test) score = LMS (Language Model Score) + SS (Stereotype Score). S.T. it is maximized when the model is unbiased and proficient in language modeling. \
+  ![ICAT-score-equation](assets/ICAT-score-eq.png)
+- **CrowS-Pairs** \
+  Crowdsourced dataset that allows to observ
+
 
 ## Takes
 - Critical insights into the current state of fairness in NLP \
