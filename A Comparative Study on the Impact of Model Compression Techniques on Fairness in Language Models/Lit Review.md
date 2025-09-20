@@ -14,12 +14,23 @@
 3. How does multilinguality affect these observations in compressed models?
 
 ### Compression Techniques Used
-- KD
+- KD (Sanh et al., 2019; Wang et al., 2020a)
 - Pruning
 - PTQ (Zafrir et al. (2021))
 
-### Methodology
-- Pruning 
+## Methodology
+- **Prune Once For All (Prune OFA)** \
+  Prunes models during the pre-training phase.
+- **Dynamic Post-training Quantization** \
+  Converts model weights to INT8 format post-training and dynamically quantizes activations during runtime based on the range of data. This method has the advantage of minimal hyperparameter tuning and additional flexibility in the model, which minimizes any potential performance loss.
+- **Knowledge Distillation** \
+  Difference with conventional KDs is in the type of feature representations that the student is encouraged to mimic.
+
+### Fairness Evaluation
+- **Intrinsic** \
+  Evaluates bias in the pre-trained representations of LMs. s.a. in the static and contexualized embedding spaces.
+- **Extrinsic** \
+  
 
 ## Takes
 - Critical insights into the current state of fairness in NLP \
