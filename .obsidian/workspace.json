@@ -167,7 +167,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -181,7 +182,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "dced3e01c3435a2d",
+  "active": "739f8e275473f3fe",
   "lastOpenFiles": [
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/~~$A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",

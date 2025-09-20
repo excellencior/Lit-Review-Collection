@@ -18,7 +18,8 @@
 - Pruning
 - PTQ (Zafrir et al. (2021))
 
-
+### Methodology
+- Pruning 
 
 ## Takes
 - Critical insights into the current state of fairness in NLP \
