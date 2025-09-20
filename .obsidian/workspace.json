@@ -167,8 +167,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -182,8 +181,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "739f8e275473f3fe",
+  "active": "dced3e01c3435a2d",
   "lastOpenFiles": [
+    "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/~~$A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",
     "Papers/A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/Lit Review.md",
@@ -195,7 +195,6 @@
     "Papers/Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Papers/A Comparative Study on the Impact of Model Compression Techniques on Fairness on Language Models.pdf",
     "Papers/Survey Paper on Machine Learning for Computer Systems and Networking.pdf",
-    "Papers/Addressing Bias and Fairness Using Fair Federated Learning - A Synthetic Review.pdf",
     "Beyond Size and Accuracy The Impact of Model Compression/Lit Review.md",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-bias-comp.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-size-comp.png",
