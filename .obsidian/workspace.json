@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Beyond Size and Accuracy The Impact of Model Compression/Lit Review.md",
+                "file": "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/Lit Review.md",
                 "mode": "source",
                 "source": false
               },
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 365.5
+    "width": 486.5,
+    "collapsed": true
   },
   "right": {
     "id": "71afa7be52686021",
@@ -183,23 +184,25 @@
   },
   "active": "739f8e275473f3fe",
   "lastOpenFiles": [
+    "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",
+    "Papers/A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models.pdf",
+    "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/Lit Review.md",
+    "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/assets",
+    "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models",
+    "Papers/TinyLLM Paper (Beyond Answers, Transferring Reasoning Capabilities to Smaller LLMs Using Multi Teacher Knowledge Distillation).pdf",
+    "Papers/Fair Compression of ML Vision Systems.pdf",
+    "Papers/Can Model Compression Improve NLP Fairness",
+    "Papers/Beyond Size and Accuracy The Impact of Model Compression.pdf",
+    "Papers/A Comparative Study on the Impact of Model Compression Techniques on Fairness on Language Models.pdf",
+    "Papers/Survey Paper on Machine Learning for Computer Systems and Networking.pdf",
+    "Papers/Addressing Bias and Fairness Using Fair Federated Learning - A Synthetic Review.pdf",
+    "Beyond Size and Accuracy The Impact of Model Compression/Lit Review.md",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-bias-comp.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-size-comp.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-1-result.png",
-    "Beyond Size and Accuracy The Impact of Model Compression/~~$Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/processed_COMPAS_dataset.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/bias_function.png",
-    "Beyond Size and Accuracy The Impact of Model Compression/Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Z Notes/Model Compression/2. BaseNote.md",
-    "Beyond Size and Accuracy The Impact of Model Compression/Lit Review.md",
-    "Beyond Size and Accuracy The Impact of Model Compression/assets",
-    "Beyond Size and Accuracy The Impact of Model Compression",
-    "Papers/FedFDP Fairness-Aware Federated Learning with.pdf",
-    "Papers/Fairness in Federated Learning - Trends, Challenges, and.pdf",
-    "Papers/Efficient Federated Learning with Timely Update.pdf",
-    "Papers/Beyond Size and Accuracy The Impact of Model Compression.pdf",
-    "Papers/BadAgent Inserting and Activating Backdoor Attacks in LLM Agents.pdf",
-    "Papers/Addressing Bias and Fairness Using Fair Federated Learning - A Synthetic Review.pdf",
     "Z Notes/Model Compression/1. RoadMap.md",
     "Untitled.canvas",
     "BadAgent Inserting and Activating Attacks in LLM Agents/Lit Review.md",
