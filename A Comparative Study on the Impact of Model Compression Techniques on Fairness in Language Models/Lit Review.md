@@ -16,7 +16,7 @@
 ### Compression Techniques Used
 - KD
 - Pruning
-- PTQ (Zafrir et al. (2021)
+- PTQ (Zafrir et al. (2021))
 
 
 
