@@ -4,19 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "1ebfcfbc4c258b4e",
+        "id": "f2be7cc10a416e0a",
         "type": "tabs",
         "children": [
           {
-            "id": "739f8e275473f3fe",
+            "id": "f4e482b1e3334d04",
             "type": "leaf",
             "state": {
-              "type": "pdf",
-              "state": {
-                "file": "Papers/Fair Compression of ML Vision Systems.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "Fair Compression of ML Vision Systems"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
         ]
@@ -179,7 +177,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "739f8e275473f3fe",
+  "active": "b0b0ee92efa190a1",
   "lastOpenFiles": [
     "Papers/FedFDP Fairness-Aware Federated Learning with.pdf",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/Lit Review.md",
