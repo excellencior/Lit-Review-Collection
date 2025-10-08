@@ -11,10 +11,14 @@
             "id": "00d4febd51a71d50",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Z Notes/Model Compression/Simple 1 week learning streak.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Simple 1 week learning streak"
             }
           }
         ]
@@ -74,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 785.5
+    "width": 785.5,
+    "collapsed": true
   },
   "right": {
     "id": "71afa7be52686021",
@@ -179,6 +184,9 @@
   },
   "active": "00d4febd51a71d50",
   "lastOpenFiles": [
+    "Z Notes/Model Compression/1. RoadMap.md",
+    "Z Notes/Model Compression/Simple 1 week learning streak.md",
+    "Z Notes/Model Compression/2. BaseNote.md",
     "Papers/FedFDP Fairness-Aware Federated Learning with.pdf",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/Lit Review.md",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/assets",
@@ -191,15 +199,12 @@
     "Papers/TinyLLM Paper (Beyond Answers, Transferring Reasoning Capabilities to Smaller LLMs Using Multi Teacher Knowledge Distillation).pdf",
     "Papers/Fair Compression of ML Vision Systems.pdf",
     "Papers/Can Model Compression Improve NLP Fairness",
-    "Papers/Beyond Size and Accuracy The Impact of Model Compression.pdf",
     "Beyond Size and Accuracy The Impact of Model Compression/Lit Review.md",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-bias-comp.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-2-size-comp.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/exp-1-result.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/processed_COMPAS_dataset.png",
     "Beyond Size and Accuracy The Impact of Model Compression/assets/bias_function.png",
-    "Z Notes/Model Compression/2. BaseNote.md",
-    "Z Notes/Model Compression/1. RoadMap.md",
     "Untitled.canvas",
     "BadAgent Inserting and Activating Attacks in LLM Agents/Lit Review.md",
     "GLaM Efficient Scaling of Language Models with Mixture-of-Experts/Lit Review.md",
