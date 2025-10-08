@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "f2be7cc10a416e0a",
+        "id": "045f24e4e8a04cf7",
         "type": "tabs",
         "children": [
           {
-            "id": "f4e482b1e3334d04",
+            "id": "00d4febd51a71d50",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -177,7 +177,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "b0b0ee92efa190a1",
+  "active": "00d4febd51a71d50",
   "lastOpenFiles": [
     "Papers/FedFDP Fairness-Aware Federated Learning with.pdf",
     "A Comparative Study on the Impact of Model Compression Techniques on Fairness in Language Models/Lit Review.md",
