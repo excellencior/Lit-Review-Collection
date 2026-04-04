@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Networks from Scratch — A Complete Refresher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #131318;
+    --bg3: #1a1a22;
+    --bg4: #22222e;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8e6f0;
+    --text2: #9b97b0;
+    --text3: #5c5876;
+    --accent: #a78bfa;
+    --accent2: #7c3aed;
+    --accent-glow: rgba(167,139,250,0.15);
+    --teal: #2dd4bf;
+    --teal-bg: rgba(45,212,191,0.08);
+    --amber: #fbbf24;
+    --amber-bg: rgba(251,191,36,0.08);
+    --coral: #f87171;
+    --coral-bg: rgba(248,113,113,0.08);
+    --green: #4ade80;
+    --green-bg: rgba(74,222,128,0.08);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'Outfit', system-ui, sans-serif;
+    --mono: 'DM Mono', 'Fira Code', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+  /* ── LAYOUT ── */
+  .shell { display: flex; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-logo {
+    padding: 0 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-logo .overline {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo h1 {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .sidebar-logo h1 em { font-style: italic; color: var(--accent); }
+
+  .nav-section-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-weight: 500;
+    padding: 0 1.5rem;
+    margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.03); }
+
+  .nav-item.active {
+    background: var(--accent-glow);
+    border-left-color: var(--accent);
+  }
+
+  .nav-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--bg4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text3);
+    flex-shrink: 0;
+    font-family: var(--mono);
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .nav-item.active .nav-num {
+    background: var(--accent);
+    color: #1a0040;
+  }
+
+  .nav-item.done .nav-num {
+    background: var(--bg4);
+    color: var(--teal);
+  }
+
+  .nav-text {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .nav-item.active .nav-text { color: var(--text); }
+
+  .sidebar-progress {
+    margin-top: auto;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--bg4);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 12.5%;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 3rem 3.5rem;
+    max-width: 860px;
+  }
+
+  /* ── CHAPTERS ── */
+  .chapter { display: none; animation: fadeup 0.25s ease; }
+  .chapter.active { display: block; }
+  @keyframes fadeup {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── CHAPTER HEADER ── */
+  .ch-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ch-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ch-tag::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .ch-title {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .ch-title em { font-style: italic; color: var(--accent); }
+
+  .ch-desc {
+    font-size: 16px;
+    color: var(--text2);
+    font-weight: 300;
+    max-width: 560px;
+  }
+
+  /* ── SECTION ELEMENTS ── */
+  .section { margin-bottom: 2rem; }
+
+  .section h2 {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .section p {
+    color: var(--text2);
+    font-weight: 300;
+    margin-bottom: 0.75rem;
+  }
+
+  .section p strong { color: var(--text); font-weight: 500; }
+
+  /* ── FORMULA BOX ── */
+  .formula {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--accent);
+    text-align: center;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .formula::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+    opacity: 0.4;
+  }
+
+  .formula .label {
+    position: absolute;
+    top: 8px; right: 12px;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #c9b8ff;
+    overflow-x: auto;
+    margin: 1rem 0;
+    white-space: pre;
+    line-height: 1.7;
+  }
+
+  .code .comment { color: var(--text3); }
+  .code .kw { color: var(--teal); }
+  .code .num { color: var(--amber); }
+  .code .fn { color: #a5f3fc; }
+  .code .hi { background: rgba(167,139,250,0.15); border-radius: 3px; padding: 1px 3px; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .callout p { margin: 0; line-height: 1.6; }
+
+  .callout.warn { background: var(--amber-bg); border: 1px solid rgba(251,191,36,0.2); color: #fde68a; }
+  .callout.warn .callout-icon::before { content: '⚠'; }
+  .callout.good { background: var(--green-bg); border: 1px solid rgba(74,222,128,0.2); color: #bbf7d0; }
+  .callout.good .callout-icon::before { content: '✓'; }
+  .callout.info { background: var(--accent-glow); border: 1px solid rgba(167,139,250,0.2); color: #ddd6fe; }
+  .callout.info .callout-icon::before { content: '→'; }
+
+  /* ── TABLES ── */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead th {
+    background: var(--bg3);
+    color: var(--text3);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+  td.label-col { font-family: var(--sans); font-weight: 500; color: var(--text); font-size: 14px; }
+  td.accent-col { color: var(--accent); }
+  td.teal-col { color: var(--teal); }
+  td.amber-col { color: var(--amber); }
+  td.coral-col { color: var(--coral); }
+
+  /* ── INTERACTIVE ── */
+  .interactive {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .interactive-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .interactive-title::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .slider-row label {
+    min-width: 120px;
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 400;
+  }
+
+  .slider-row input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 3px;
+    background: var(--bg4);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .slider-row input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .slider-val {
+    min-width: 52px;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .output-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .output-chip {
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 13px;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .output-chip .chip-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .output-chip .chip-val {
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── NEURON VIZ ── */
+  .neuron-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+
+  .neuron-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--border2);
+    background: var(--bg4);
+    color: var(--text2);
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+    position: relative;
+  }
+
+  .neuron-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  .neuron-wrap { display: flex; flex-direction: column; align-items: center; }
+
+  .arrow-sym { color: var(--text3); font-size: 16px; margin-bottom: 20px; }
+
+  /* ── SIGMOID CHART ── */
+  canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+
+  /* ── ONE-HOT ── */
+  .onehot-grid {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .onehot-cell {
+    width: 36px; height: 44px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 1px solid var(--border);
+    background: var(--bg4);
+    transition: all 0.25s;
+  }
+
+  .onehot-cell.hot {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+  }
+
+  .onehot-cell .cell-val {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text3);
+    transition: color 0.25s;
+  }
+
+  .onehot-cell.hot .cell-val { color: var(--accent); }
+
+  .onehot-cell .cell-idx {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  /* ── BUG SUMMARY ── */
+  .bug-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .bug-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bug-num {
+    background: var(--coral-bg);
+    border: 1px solid rgba(248,113,113,0.3);
+    color: var(--coral);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-family: var(--mono);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .bug-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .bug-body { padding: 12px 14px; }
+
+  .bug-before, .bug-after {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 4px 0;
+  }
+
+  .bug-before { background: var(--coral-bg); color: #fca5a5; border-left: 2px solid var(--coral); }
+  .bug-after  { background: var(--green-bg);  color: #86efac; border-left: 2px solid var(--green); }
+
+  /* ── NETWORK DIAGRAM ── */
+  .net-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+
+  .net-layer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .net-node {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: var(--bg4);
+    transition: all 0.3s;
+  }
+
+  .net-node.active {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(167,139,250,0.3);
+  }
+
+  .net-connector {
+    flex: 0 0 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--border2), transparent);
+    align-self: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .net-label {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ── NAVIGATION BUTTONS ── */
+  .ch-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+  }
+
+  .btn-primary {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #6d28d9;
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+  }
+
+  .ch-nav-info {
+    font-size: 13px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  /* ── GRADIENT DESCENT VIZ ── */
+  #gd-canvas { background: var(--bg4); border-radius: 8px; }
+
+  /* ── VARIANCE METER ── */
+  .var-meter {
+    height: 8px;
+    background: var(--bg4);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .var-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+
+  /* ── CHAPTER 8 INIT TABLE ── */
+  .init-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 1rem 0;
+  }
+
+  .init-panel {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .init-panel h4 {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .init-panel.bad h4 { color: var(--coral); }
+  .init-panel.good h4 { color: var(--teal); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 2rem 1.5rem; }
+    .ch-title { font-size: 32px; }
+  }
+
+  /* ── HERO ── */
+  .hero-splash {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 2rem 0;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em { font-style: italic; color: var(--accent); }
+
+  .hero-body {
+    font-size: 18px;
+    color: var(--text2);
+    font-weight: 300;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .chapter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2.5rem;
+  }
+
+  .pill {
+    padding: 5px 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .pill:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hero-start {
+    padding: 14px 28px;
+    background: var(--accent2);
+    border: none;
+    border-radius: 10px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s;
+    width: fit-content;
+  }
+
+  .hero-start:hover {
+    background: #5b21b6;
+    box-shadow: 0 0 30px rgba(124,58,237,0.5);
+    transform: translateY(-1px);
+  }
+
+  /* ── SIGMOID CURVE SVG ── */
+  .sig-svg { width: 100%; max-width: 480px; display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="overline">Course</div>
+      <h1>Neural Networks<br><em>from Scratch</em></h1>
+    </div>
+    <div class="nav-section-label">Chapters</div>
+    <a class="nav-item active" data-ch="0" onclick="goTo(0)">
+      <div class="nav-num">0</div>
+      <div class="nav-text">Introduction</div>
+    </a>
+    <a class="nav-item" data-ch="1" onclick="goTo(1)">
+      <div class="nav-num">1</div>
+      <div class="nav-text">What is a neuron?</div>
+    </a>
+    <a class="nav-item" data-ch="2" onclick="goTo(2)">
+      <div class="nav-num">2</div>
+      <div class="nav-text">Activation functions</div>
+    </a>
+    <a class="nav-item" data-ch="3" onclick="goTo(3)">
+      <div class="nav-num">3</div>
+      <div class="nav-text">Matrices & layers</div>
+    </a>
+    <a class="nav-item" data-ch="4" onclick="goTo(4)">
+      <div class="nav-num">4</div>
+      <div class="nav-text">Forward pass</div>
+    </a>
+    <a class="nav-item" data-ch="5" onclick="goTo(5)">
+      <div class="nav-num">5</div>
+      <div class="nav-text">Loss functions</div>
+    </a>
+    <a class="nav-item" data-ch="6" onclick="goTo(6)">
+      <div class="nav-num">6</div>
+      <div class="nav-text">Backpropagation</div>
+    </a>
+    <a class="nav-item" data-ch="7" onclick="goTo(7)">
+      <div class="nav-num">7</div>
+      <div class="nav-text">Gradient descent</div>
+    </a>
+    <a class="nav-item" data-ch="8" onclick="goTo(8)">
+      <div class="nav-num">8</div>
+      <div class="nav-text">Weight initialisation</div>
+    </a>
+    <div class="sidebar-progress">
+      <div class="progress-label" id="prog-label">Chapter 0 of 8</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main-content">
+
+    <!-- ══ CHAPTER 0: INTRO ══ -->
+    <div class="chapter active" id="ch-0">
+      <div class="hero-splash">
+        <div class="hero-eyebrow">Neural Networks — Ground Up</div>
+        <h1 class="hero-title">Everything you need<br>to understand your<br><em>own code.</em></h1>
+        <p class="hero-body">
+          You wrote a neural network. It scored 0% accuracy. This course explains — from pure arithmetic — why, and how to fix it. No statistics assumed. No hand-waving.
+        </p>
+        <div class="chapter-pills">
+          <span class="pill" onclick="goTo(1)">① What is a neuron?</span>
+          <span class="pill" onclick="goTo(2)">② Activation functions</span>
+          <span class="pill" onclick="goTo(3)">③ Matrices & layers</span>
+          <span class="pill" onclick="goTo(4)">④ Forward pass</span>
+          <span class="pill" onclick="goTo(5)">⑤ Loss functions</span>
+          <span class="pill" onclick="goTo(6)">⑥ Backpropagation</span>
+          <span class="pill" onclick="goTo(7)">⑦ Gradient descent</span>
+          <span class="pill" onclick="goTo(8)">⑧ Weight initialisation</span>
+        </div>
+        <button class="hero-start" onclick="goTo(1)">
+          Start the course <span>→</span>
+        </button>
+      </div>
+
+      <div class="section">
+        <h2>What this course covers</h2>
+        <p>Your network is an MNIST digit classifier — it looks at 28×28 pixel images and predicts which digit (0–9) is shown. Every concept in this course connects directly back to your code.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Chapter</th><th>Concept</th><th>Bug it explains</th></tr></thead>
+            <tbody>
+              <tr><td class="label-col">1 — Neuron</td><td>Weighted sum, bias</td><td>—</td></tr>
+              <tr><td class="label-col">2 — Activations</td><td>Sigmoid, vanishing gradient</td><td>Bug ①: uniform init → saturation</td></tr>
+              <tr><td class="label-col">3 — Matrices</td><td>Matrix multiplication, shapes</td><td>—</td></tr>
+              <tr><td class="label-col">4 — Forward pass</td><td>Layer-by-layer computation</td><td>Bug ②: no pixel normalisation</td></tr>
+              <tr><td class="label-col">5 — Loss</td><td>MSE, one-hot encoding</td><td>—</td></tr>
+              <tr><td class="label-col">6 — Backprop</td><td>Chain rule, error terms δ</td><td>Bug ⑤: delta computed after update</td></tr>
+              <tr><td class="label-col">7 — Gradient descent</td><td>Learning rate, epochs</td><td>Bug ③: lr=0.01 · Bug ④: 1 epoch</td></tr>
+              <tr><td class="label-col">8 — Init</td><td>Variance, He initialisation</td><td>Bug ①: np.random.rand * 0.01</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ch-nav">
+        <div></div>
+        <div class="ch-nav-info">0 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(1)">Chapter 1 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 1: NEURON ══ -->
+    <div class="chapter" id="ch-1">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 1</div>
+        <h1 class="ch-title">What is a <em>neuron?</em></h1>
+        <p class="ch-desc">The single computing unit that everything else is built from.</p>
+      </div>
+
+      <div class="section">
+        <h2>The biological inspiration</h2>
+        <p>A brain neuron receives electrical signals from thousands of other neurons. It adds them up. If the total is strong enough, it fires — sending its own signal forward. Your code is a mathematical abstraction of exactly this.</p>
+      </div>
+
+      <div class="section">
+        <h2>A neuron is a weighted sum</h2>
+        <p>Imagine a neuron with 3 inputs: x₁, x₂, x₃. Each has a <strong>weight</strong> — a number representing how important that input is. The neuron computes:</p>
+        <div class="formula">
+          <span class="label">Weighted sum</span>
+          z = w₁·x₁ + w₂·x₂ + w₃·x₃ + b
+        </div>
+        <p>The letter <strong>b</strong> is the <strong>bias</strong>. It lets the neuron shift its output up or down regardless of the inputs — like a personal threshold. Without it, a neuron with all-zero inputs would always output zero, which is too restrictive.</p>
+        <div class="callout info"><div class="callout-icon"></div><p><strong>Intuition:</strong> weights are like dials — turn one up and that input matters more. A negative weight means that input actively pushes the neuron's output down.</p></div>
+      </div>
+
+      <div class="section">
+        <h2>Try it — adjust the weights</h2>
+        <div class="interactive">
+          <div class="interactive-title">Live neuron</div>
+          <div class="slider-row"><label>Input x₁</label><input type="range" id="n-x1" min="0" max="1" step="0.01" value="0.8" oninput="updateNeuron()"><span class="slider-val" id="v-x1">0.80</span></div>
+          <div class="slider-row"><label>Input x₂</label><input type="range" id="n-x2" min="0" max="1" step="0.01" value="0.3" oninput="updateNeuron()"><span class="slider-val" id="v-x2">0.30</span></div>
+          <div class="slider-row"><label>Weight w₁</label><input type="range" id="n-w1" min="-2" max="2" step="0.01" value="1.2" oninput="updateNeuron()"><span class="slider-val" id="v-w1">1.20</span></div>
+          <div class="slider-row"><label>Weight w₂</label><input type="range" id="n-w2" min="-2" max="2" step="0.01" value="-0.5" oninput="updateNeuron()"><span class="slider-val" id="v-w2">-0.50</span></div>
+          <div class="slider-row"><label>Bias b</label><input type="range" id="n-b" min="-2" max="2" step="0.01" value="0.1" oninput="updateNeuron()"><span class="slider-val" id="v-b">0.10</span></div>
+          <div class="output-row">
+            <div class="output-chip"><span class="chip-label">z = w₁x₁ + w₂x₂ + b</span><span class="chip-val" id="v-z">0.000</span></div>
+          </div>
+          <p style="font-size:13px;color:var(--text3);margin-top:8px">Notice: drag w₂ into negatives. That input now <em>opposes</em> the neuron firing.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>In your code</h2>
+        <div class="code"><span class="comment"># This computes the weighted sum for an ENTIRE LAYER at once</span>
+z = <span class="fn">mid_term</span>(neurons[layer<span class="num">-1</span>], weight_matrix[layer], bias_matrix[layer])
+
+<span class="comment"># Which expands to:</span>
+z = neurons[layer<span class="num">-1</span>] @ weight_matrix[layer] + bias_matrix[layer]
+<span class="comment"># @ is matrix multiply — computes ALL neurons' weighted sums simultaneously</span></div>
+        <p>The <code>@</code> operator is matrix multiplication. We'll cover exactly why it works like this in Chapter 3.</p>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(0)">← Intro</button>
+        <div class="ch-nav-info">1 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(2)">Chapter 2 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 2: ACTIVATIONS ══ -->
+    <div class="chapter" id="ch-2">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 2</div>
+        <h1 class="ch-title">Activation <em>functions</em></h1>
+        <p class="ch-desc">Why we can't use the raw weighted sum — and what we do instead.</p>
+      </div>
+
+      <div class="section">
+        <h2>The linearity problem</h2>
+        <p>If every neuron just outputs its raw weighted sum z, something terrible happens. Stack three such layers and the mathematics collapses — the entire network is mathematically identical to a single neuron.</p>
+        <div class="callout warn"><div class="callout-icon"></div><p>A network with no activation functions = an expensive straight line. It can only learn patterns that are perfectly linear, which MNIST is not.</p></div>
+        <p>We need something <strong>nonlinear</strong> after each weighted sum — something that bends the output, creating the ability to learn curves and complex patterns.</p>
+      </div>
+
+      <div class="section">
+        <h2>Sigmoid: the soft on/off switch</h2>
+        <p>The sigmoid function takes any real number and squashes it into the range (0, 1):</p>
+        <div class="formula">
+          <span class="label">Sigmoid</span>
+          σ(z) = 1 / (1 + e⁻ᶻ)
+        </div>
+        <p>The number e ≈ 2.718 (Euler's number). You don't need to memorise this formula — just understand the shape: very negative z → output ≈ 0, near-zero z → output ≈ 0.5, very positive z → output ≈ 1.</p>
+      </div>
+
+      <div class="section">
+        <h2>Explore the sigmoid curve</h2>
+        <div class="interactive">
+          <div class="interactive-title">Sigmoid function</div>
+          <div class="slider-row"><label>z value</label><input type="range" id="sig-z" min="-6" max="6" step="0.1" value="0" oninput="updateSigmoid()"><span class="slider-val" id="v-sig-z">0.0</span></div>
+          <svg class="sig-svg" viewBox="0 0 480 180" id="sig-svg">
+            <!-- Axes -->
+            <line x1="20" y1="90" x2="460" y2="90" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <line x1="240" y1="10" x2="240" y2="170" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <!-- Grid lines -->
+            <line x1="20" y1="20" x2="460" y2="20" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="3,4"/>
+            <line x1="20" y1="160" x2="460" y2="160" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="3,4"/>
+            <!-- Curve -->
+            <polyline id="sig-curve" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" points=""/>
+            <!-- Dot -->
+            <circle id="sig-dot" cx="240" cy="90" r="6" fill="#a78bfa" stroke="#1a1a22" stroke-width="2"/>
+            <!-- Labels -->
+            <text x="24" y="25" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace">1.0</text>
+            <text x="24" y="94" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace">0.5</text>
+            <text x="24" y="164" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace">0.0</text>
+            <text x="450" y="100" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace" text-anchor="end">z</text>
+            <text x="244" y="16" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace">σ(z)</text>
+          </svg>
+          <div class="output-row">
+            <div class="output-chip"><span class="chip-label">σ(z)</span><span class="chip-val" id="v-sig-out">0.5000</span></div>
+            <div class="output-chip"><span class="chip-label">σ′(z)  — gradient</span><span class="chip-val" id="v-sig-deriv">0.2500</span></div>
+          </div>
+          <p style="font-size:13px;color:var(--text3);margin-top:8px" id="sig-verdict">Drag z to the extremes and watch the gradient collapse to zero.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The derivative — why it matters</h2>
+        <p>The derivative σ′(z) measures the <strong>slope</strong> of the sigmoid at a given z. Its formula is elegant:</p>
+        <div class="formula">σ′(z) = σ(z) · (1 − σ(z))</div>
+        <p>This is the <strong>gradient</strong> — the signal that tells the network "how much to adjust the weights." Its maximum value is 0.25 (at z = 0). When z is large in either direction, σ′ → 0.</p>
+        <div class="callout warn"><div class="callout-icon"></div><p><strong>Vanishing gradients:</strong> if z is always large, σ′ ≈ 0 everywhere. Multiplying by 0 kills the learning signal. The network gets no feedback and never improves. This is exactly what happened in your original code.</p></div>
+      </div>
+
+      <div class="section">
+        <h2>In your code</h2>
+        <div class="code"><span class="kw">def</span> <span class="fn">sigmoid</span>(x):
+    <span class="comment"># σ(x) = 1 / (1 + e^{-x})</span>
+    <span class="kw">return</span> <span class="num">1.0</span> / (<span class="num">1.0</span> + np.exp(-x))
+
+<span class="kw">def</span> <span class="fn">sigmoid_derivative</span>(z):
+    <span class="comment"># σ'(z) = σ(z) · (1 - σ(z))</span>
+    <span class="comment"># IMPORTANT: input is z (pre-activation), not a (post-activation)</span>
+    s = <span class="fn">sigmoid</span>(z)
+    <span class="kw">return</span> s * (<span class="num">1.0</span> - s)</div>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(1)">← Chapter 1</button>
+        <div class="ch-nav-info">2 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(3)">Chapter 3 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 3: MATRICES ══ -->
+    <div class="chapter" id="ch-3">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 3</div>
+        <h1 class="ch-title">Matrices &amp; <em>layers</em></h1>
+        <p class="ch-desc">Why we use matrix multiplication to run an entire layer at once.</p>
+      </div>
+
+      <div class="section">
+        <h2>The scale problem</h2>
+        <p>Your first hidden layer has 16 neurons, each receiving 784 inputs. That's 16 × 784 = <strong>12,544 separate equations</strong> to compute — just for one layer, one image. Writing them out individually is impossible.</p>
+        <p>Matrices solve this elegantly: you pack all the weights into a table and compute everything with one operation.</p>
+      </div>
+
+      <div class="section">
+        <h2>What a weight matrix looks like</h2>
+        <p>The weight matrix W for a layer has one <strong>row per input neuron</strong> and one <strong>column per output neuron</strong>. Entry W[i][j] is the weight from input i to output neuron j.</p>
+        <div class="formula">
+          <span class="label">Matrix shapes</span>
+          W[1]: (784, 16) — 784 inputs × 16 neurons<br>
+          W[2]: (16, 16)  — 16 inputs × 16 neurons<br>
+          W[3]: (16, 10)  — 16 inputs × 10 outputs
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The shape rule — memorise this</h2>
+        <p>Matrix multiplication works when the inner dimensions match. The result takes the outer dimensions:</p>
+        <div class="formula">(1, 784) @ (784, 16) = (1, 16)</div>
+        <p>Read the shapes left to right: 1 image × 784 pixels, multiplied by 784 inputs → 16 outputs, gives 1 image × 16 activations.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Variable</th><th>Shape</th><th>What it represents</th></tr></thead>
+            <tbody>
+              <tr><td class="label-col">A[0]</td><td class="accent-col">(1, 784)</td><td>One flattened, normalised image</td></tr>
+              <tr><td class="label-col">W[1]</td><td class="teal-col">(784, 16)</td><td>All weights: input layer → hidden layer 1</td></tr>
+              <tr><td class="label-col">B[1]</td><td class="amber-col">(1, 16)</td><td>One bias per neuron in hidden layer 1</td></tr>
+              <tr><td class="label-col">Z[1]</td><td class="accent-col">(1, 16)</td><td>Pre-activation values for 16 neurons</td></tr>
+              <tr><td class="label-col">A[1]</td><td class="accent-col">(1, 16)</td><td>Post-activation (after sigmoid)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The complete forward formula</h2>
+        <div class="formula">
+          <span class="label">For each layer</span>
+          Z[l] = A[l−1] @ W[l] + B[l]<br>
+          A[l] = σ(Z[l])
+        </div>
+        <p>A[l−1] contains the previous layer's outputs. W[l] routes them to the current layer. B[l] shifts each neuron. Then σ introduces nonlinearity.</p>
+      </div>
+
+      <div class="section">
+        <h2>Total number of parameters in your network</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Layer</th><th>Weights</th><th>Biases</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td class="label-col">784 → 16</td><td class="accent-col">12,544</td><td>16</td><td class="teal-col">12,560</td></tr>
+              <tr><td class="label-col">16 → 16</td><td class="accent-col">256</td><td>16</td><td class="teal-col">272</td></tr>
+              <tr><td class="label-col">16 → 10</td><td class="accent-col">160</td><td>10</td><td class="teal-col">170</td></tr>
+              <tr><td class="label-col"><strong>Total</strong></td><td></td><td></td><td class="amber-col"><strong>13,002</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Every one of these 13,002 numbers gets updated on every training step.</p>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(2)">← Chapter 2</button>
+        <div class="ch-nav-info">3 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(4)">Chapter 4 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 4: FORWARD PASS ══ -->
+    <div class="chapter" id="ch-4">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 4</div>
+        <h1 class="ch-title">The <em>forward pass</em></h1>
+        <p class="ch-desc">How a raw image becomes a digit prediction, step by step.</p>
+      </div>
+
+      <div class="section">
+        <h2>The full journey</h2>
+        <p>A 28×28 MNIST image enters the network. By the time it exits, it has been transformed into a vector of 10 numbers — one score per digit. The digit with the highest score is the prediction.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Step</th><th>Operation</th><th>Shape</th></tr></thead>
+            <tbody>
+              <tr><td class="label-col">Input</td><td>Flatten 28×28, then ÷ 255</td><td class="accent-col">(28,28) → (1,784)</td></tr>
+              <tr><td class="label-col">Layer 1</td><td>Z = A₀·W₁+B₁, A₁ = σ(Z)</td><td class="teal-col">(1,784) → (1,16)</td></tr>
+              <tr><td class="label-col">Layer 2</td><td>Z = A₁·W₂+B₂, A₂ = σ(Z)</td><td class="teal-col">(1,16) → (1,16)</td></tr>
+              <tr><td class="label-col">Output</td><td>Z = A₂·W₃+B₃, A₃ = σ(Z)</td><td class="amber-col">(1,16) → (1,10)</td></tr>
+              <tr><td class="label-col">Predict</td><td>argmax(A₃)</td><td class="accent-col">digit 0–9</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Simulate a pixel through layer 1</h2>
+        <div class="interactive">
+          <div class="interactive-title">Forward pass simulator</div>
+          <div class="slider-row"><label>Pixel value (0–255)</label><input type="range" id="fp-px" min="0" max="255" step="1" value="180" oninput="updateForward()"><span class="slider-val" id="v-fp-px">180</span></div>
+          <div class="neuron-display" id="fp-display">
+            <div class="neuron-wrap"><div class="neuron-circle" id="fp-raw">180</div><div class="neuron-label">raw pixel</div></div>
+            <div class="arrow-sym">→</div>
+            <div class="neuron-wrap"><div class="neuron-circle" id="fp-norm">0.71</div><div class="neuron-label">÷ 255</div></div>
+            <div class="arrow-sym">→</div>
+            <div class="neuron-wrap"><div class="neuron-circle" id="fp-z">0.55</div><div class="neuron-label">z ≈</div></div>
+            <div class="arrow-sym">→</div>
+            <div class="neuron-wrap"><div class="neuron-circle" id="fp-sig">0.63</div><div class="neuron-label">σ(z)</div></div>
+          </div>
+          <div id="fp-msg" style="font-size:13px;color:var(--text3);text-align:center;margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Bug fix ② — pixel normalisation</h2>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">②</div><div class="bug-title">Missing ÷ 255 normalisation</div></div>
+          <div class="bug-body">
+            <div class="bug-before">neurons[0] = np.array(image).flatten().reshape(1, -1)</div>
+            <div class="bug-after">neurons[0] = np.array(image).flatten().reshape(1, -1) / 255.0</div>
+            <p style="font-size:13px;color:var(--text2);margin-top:10px">Raw pixel values are 0–255. Without normalisation, the weighted sum z = Σ wᵢ·xᵢ is roughly 784 × 128 × 0.01 ≈ 1000. Plugging that into sigmoid gives σ(1000) ≈ 1.0 with gradient σ′ ≈ 0. The network is immediately dead.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The fixed forward function</h2>
+        <div class="code"><span class="kw">def</span> <span class="fn">forward</span>(image):
+    <span class="comment"># BUG FIX ②: normalise to [0,1] so z stays near 0 initially</span>
+    neurons[<span class="num">0</span>] = np.array(image).flatten().reshape(<span class="num">1</span>, <span class="num">-1</span>) / <span class="hi">255.0</span>
+
+    <span class="kw">for</span> l <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, len(layers)):
+        z = neurons[l<span class="num">-1</span>] @ weight_matrix[l] + bias_matrix[l]  <span class="comment"># Z[l]</span>
+        zvalues[l] = z                                             <span class="comment"># save for backprop</span>
+        neurons[l] = <span class="fn">sigmoid</span>(z)                               <span class="comment"># A[l]</span></div>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(3)">← Chapter 3</button>
+        <div class="ch-nav-info">4 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(5)">Chapter 5 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 5: LOSS ══ -->
+    <div class="chapter" id="ch-5">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 5</div>
+        <h1 class="ch-title">Loss <em>functions</em></h1>
+        <p class="ch-desc">Measuring how wrong the network is — in a single number.</p>
+      </div>
+
+      <div class="section">
+        <h2>Why we need a loss</h2>
+        <p>After the forward pass, the network outputs a vector of 10 numbers. We need to compare this against the correct answer. The <strong>loss function</strong> collapses that comparison into one number — zero means perfect, larger means worse.</p>
+        <p>Your code uses <strong>Mean Squared Error (MSE)</strong>:</p>
+        <div class="formula">
+          <span class="label">MSE Loss</span>
+          C = Σᵢ (A[L]ᵢ − yᵢ)²
+        </div>
+        <p>Where A[L] is the network's output vector (10 numbers) and y is the target vector (also 10 numbers).</p>
+      </div>
+
+      <div class="section">
+        <h2>One-hot encoding</h2>
+        <p>The target y can't just be the number 3. We need a vector to subtract from A[L]. <strong>One-hot encoding</strong> creates a vector of zeros with a single 1 at the correct digit's position:</p>
+        <div class="formula">label = 3  →  y = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]</div>
+        <div class="interactive">
+          <div class="interactive-title">One-hot encoder</div>
+          <div class="slider-row"><label>True digit</label><input type="range" id="oh-digit" min="0" max="9" step="1" value="3" oninput="updateOneHot()"><span class="slider-val" id="v-oh-digit">3</span></div>
+          <div class="onehot-grid" id="onehot-grid"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Explore the loss surface</h2>
+        <div class="interactive">
+          <div class="interactive-title">Loss and gradient</div>
+          <div class="slider-row"><label>Prediction</label><input type="range" id="ls-pred" min="0" max="1" step="0.01" value="0.3" oninput="updateLoss()"><span class="slider-val" id="v-ls-pred">0.30</span></div>
+          <div class="slider-row"><label>True label</label><input type="range" id="ls-true" min="0" max="1" step="1" value="1" oninput="updateLoss()"><span class="slider-val" id="v-ls-true">1</span></div>
+          <div class="output-row">
+            <div class="output-chip"><span class="chip-label">C = (pred − true)²</span><span class="chip-val" id="v-ls-loss">0.4900</span></div>
+            <div class="output-chip"><span class="chip-label">∂C/∂A = 2(pred−true)</span><span class="chip-val" id="v-ls-grad">-1.4000</span></div>
+          </div>
+          <p style="font-size:13px;color:var(--text3);margin-top:8px" id="ls-msg">When prediction = truth: loss = 0 AND gradient = 0 → no update needed.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The gradient of the loss</h2>
+        <p>For the network to learn, we need to know: "which direction should I change A[L] to reduce C?" The derivative of C with respect to A[L] gives us exactly that:</p>
+        <div class="formula">∂C/∂A[L] = 2(A[L] − y)</div>
+        <p>This is the starting point of backpropagation — the error signal that flows backwards through the network in Chapter 6.</p>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(4)">← Chapter 4</button>
+        <div class="ch-nav-info">5 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(6)">Chapter 6 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 6: BACKPROP ══ -->
+    <div class="chapter" id="ch-6">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 6</div>
+        <h1 class="ch-title">Back&shy;<em>propagation</em></h1>
+        <p class="ch-desc">How the loss flows backwards to assign blame to every single weight.</p>
+      </div>
+
+      <div class="section">
+        <h2>The chain rule</h2>
+        <p>Backprop is the <strong>chain rule</strong> from algebra, applied repeatedly. The chain rule says: if C depends on A, and A depends on Z, and Z depends on W, then:</p>
+        <div class="formula">∂C/∂W = (∂C/∂A) · (∂A/∂Z) · (∂Z/∂W)</div>
+        <p>We chain derivatives together, multiplying them. Each term answers one question: "how does a small change in X affect Y?"</p>
+      </div>
+
+      <div class="section">
+        <h2>The error term δ (delta)</h2>
+        <p>To organise the chain rule, we define an <strong>error term</strong> δ[l] for each layer — representing how much that layer contributed to the final error.</p>
+        <h3>Output layer (layer L)</h3>
+        <div class="formula">
+          <span class="label">Output error term</span>
+          δ[L] = 2(A[L] − y) · σ′(Z[L])
+        </div>
+        <p>Two parts multiplied together: the <strong>loss gradient</strong> (how wrong the output is) and the <strong>activation gradient</strong> (how sensitive the output is to Z).</p>
+        <h3>Hidden layers (working backwards)</h3>
+        <div class="formula">
+          <span class="label">Hidden layer error term</span>
+          δ[l] = (δ[l+1] · W[l+1]ᵀ) · σ′(Z[l])
+        </div>
+        <p>We propagate the error from the layer <em>in front</em> (δ[l+1]) backwards through the weights (W[l+1]ᵀ), then multiply by the local sensitivity (σ′(Z[l])).</p>
+        <div class="callout warn"><div class="callout-icon"></div><p>Every hidden layer multiplies by σ′(Z[l]). If Z is large → σ′ ≈ 0 → δ ≈ 0. The error vanishes before reaching the early layers. This is why normalisation and good weight init matter so much.</p></div>
+      </div>
+
+      <div class="section">
+        <h2>Computing the weight updates</h2>
+        <p>Once we have δ, the gradients for weights and biases are simple matrix operations:</p>
+        <div class="formula">
+          ∂C/∂W[l] = A[l−1]ᵀ · δ[l]<br>
+          ∂C/∂B[l] = δ[l]
+        </div>
+        <p>The <strong>ᵀ</strong> is the transpose — flipping the matrix so the shapes align. This gives us exactly how much each weight contributed to the error.</p>
+      </div>
+
+      <div class="section">
+        <h2>Bug fix ⑤ — wrong delta order</h2>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">⑤</div><div class="bug-title">Delta computed after weight update — stale values</div></div>
+          <div class="bug-body">
+            <div class="bug-before">weight_matrix[layer] -= lr * del_w   ← update first
+delta = del_l(delta, layer)           ← then compute delta with NEW W</div>
+            <div class="bug-after">if l > 1:
+    delta = (delta @ W[l].T) * sigmoid_deriv(Z[l-1])  ← compute first
+W[l] -= lr * dW   ← then update</div>
+            <p style="font-size:13px;color:var(--text2);margin-top:10px">When computing δ[l], we need W[l+1] as it was during the forward pass. If we update W[l+1] first, we're using the wrong weights to compute δ[l]. The gradient becomes corrupted at every layer.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The fixed backward function</h2>
+        <div class="code"><span class="kw">def</span> <span class="fn">backward</span>(label, lr=<span class="num">0.1</span>):
+    y = <span class="fn">one_hot_encode</span>(<span class="num">10</span>, label)
+    L = len(layers) - <span class="num">1</span>
+
+    <span class="comment"># Output layer: δ[L] = 2(A[L] - y) · σ'(Z[L])</span>
+    delta = <span class="num">2</span> * (neurons[L] - y) * <span class="fn">sigmoid_derivative</span>(zvalues[L])
+
+    <span class="kw">for</span> l <span class="kw">in</span> <span class="fn">range</span>(L, <span class="num">0</span>, <span class="num">-1</span>):
+        dW = neurons[l<span class="num">-1</span>].T @ delta      <span class="comment"># ∂C/∂W[l]</span>
+        dB = delta                         <span class="comment"># ∂C/∂B[l]</span>
+
+        <span class="comment"># BUG FIX ⑤: propagate delta BEFORE updating weights</span>
+        <span class="kw">if</span> l > <span class="num">1</span>:
+            delta = <span class="hi">(delta @ weight_matrix[l].T)</span> * <span class="fn">sigmoid_derivative</span>(zvalues[l<span class="num">-1</span>])
+
+        weight_matrix[l] -= lr * dW       <span class="comment"># update AFTER</span>
+        bias_matrix[l]   -= lr * dB</div>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(5)">← Chapter 5</button>
+        <div class="ch-nav-info">6 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(7)">Chapter 7 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 7: GRADIENT DESCENT ══ -->
+    <div class="chapter" id="ch-7">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 7</div>
+        <h1 class="ch-title">Gradient <em>descent</em></h1>
+        <p class="ch-desc">How we use the gradients to actually update the weights.</p>
+      </div>
+
+      <div class="section">
+        <h2>The update rule</h2>
+        <p>We have the gradient — a number telling us "which direction makes the error larger." To reduce the error, we move in the <em>opposite</em> direction by a small step:</p>
+        <div class="formula">
+          <span class="label">Gradient descent</span>
+          W[l] ← W[l] − η · ∂C/∂W[l]
+        </div>
+        <p>η (eta) is the <strong>learning rate</strong>. It controls the step size. Too large and you overshoot. Too small and training takes forever. The minus sign ensures we go downhill.</p>
+      </div>
+
+      <div class="section">
+        <h2>Visualise the loss landscape</h2>
+        <div class="interactive">
+          <div class="interactive-title">Gradient descent simulation</div>
+          <div class="slider-row"><label>Learning rate η</label><input type="range" id="gd-lr" min="0.001" max="0.5" step="0.001" value="0.1" oninput="updateGD()"><span class="slider-val" id="v-gd-lr">0.100</span></div>
+          <canvas id="gd-canvas" width="600" height="200"></canvas>
+          <div id="gd-msg" style="font-size:13px;color:var(--text3);text-align:center;margin-top:8px;min-height:20px"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Bug fixes ③ and ④ — learning rate and epochs</h2>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">③</div><div class="bug-title">Learning rate too small</div></div>
+          <div class="bug-body">
+            <div class="bug-before">lr = 0.01   ← each step is tiny, weights barely move</div>
+            <div class="bug-after">lr = 0.1    ← 10× larger, training converges in reasonable time</div>
+          </div>
+        </div>
+        <div class="bug-card" style="margin-top:8px">
+          <div class="bug-header"><div class="bug-num">④</div><div class="bug-title">Only 1 training epoch</div></div>
+          <div class="bug-body">
+            <div class="bug-before">propagate()   ← called once — network saw each image exactly once</div>
+            <div class="bug-after">train(epochs=500)   ← 500 full passes through training data</div>
+            <p style="font-size:13px;color:var(--text2);margin-top:10px">Think of studying: reading a fact once doesn't make it stick. Each epoch gives the weights another chance to adjust. With a small dataset (100 images), you need many epochs to converge.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The training loop</h2>
+        <div class="code"><span class="kw">def</span> <span class="fn">train</span>(epochs=<span class="hi">500</span>, lr=<span class="hi">0.1</span>):
+    <span class="comment"># BUG FIX ③ ④: more epochs, higher lr</span>
+    <span class="kw">for</span> epoch <span class="kw">in</span> <span class="fn">range</span>(epochs):
+        <span class="kw">for</span> i, image <span class="kw">in</span> <span class="fn">enumerate</span>(train_images):
+            <span class="fn">forward</span>(image)
+            <span class="fn">backward</span>(train_labels[i], lr=lr)
+
+        <span class="kw">if</span> (epoch + <span class="num">1</span>) % <span class="num">50</span> == <span class="num">0</span>:
+            acc = <span class="fn">accuracy</span>(train_images, train_labels)
+            <span class="fn">print</span>(f<span class="num">"Epoch {epoch+1:>4}/{epochs}  —  acc: {acc:.2%}"</span>)</div>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(6)">← Chapter 6</button>
+        <div class="ch-nav-info">7 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(8)">Chapter 8 →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 8: WEIGHT INIT ══ -->
+    <div class="chapter" id="ch-8">
+      <div class="ch-header">
+        <div class="ch-tag">Chapter 8</div>
+        <h1 class="ch-title">Weight <em>initialisation</em></h1>
+        <p class="ch-desc">Why the starting values of weights matter enormously — and the math behind it.</p>
+      </div>
+
+      <div class="section">
+        <h2>A neuron is a sum of n random variables</h2>
+        <p>Consider one neuron in layer 1 receiving 784 inputs:</p>
+        <div class="formula">z = w₁x₁ + w₂x₂ + ⋯ + w₇₈₄x₇₈₄</div>
+        <p>Each term wᵢxᵢ is a random variable. We're adding 784 of them. How spread out (variable) is the result?</p>
+      </div>
+
+      <div class="section">
+        <h2>Variance of a product</h2>
+        <p>From basic algebra: if two independent quantities A and B have variances σ²_A and σ²_B, the variance of their product is:</p>
+        <div class="formula">Var(A·B) = Var(A) · Var(B)</div>
+        <p>This assumes both have mean zero — which is true after normalising pixels (mean ≈ 0) and initialising weights with mean 0.</p>
+      </div>
+
+      <div class="section">
+        <h2>Variance of a sum of n products</h2>
+        <p>Since the 784 terms wᵢxᵢ are independent, their variances add:</p>
+        <div class="formula">
+          <span class="label">Key equation</span>
+          Var(z) = n · Var(w) · Var(x)
+        </div>
+        <p>Where n = fan_in = number of inputs. This is the most important equation in this chapter. The variance of z is <strong>proportional to n</strong>.</p>
+        <div class="callout info"><div class="callout-icon"></div><p><strong>fan_in</strong> is just the number of inputs to a layer. For layer 1: fan_in = 784. For layers 2 and 3: fan_in = 16. It's called "fan-in" because the inputs fan into the neuron.</p></div>
+      </div>
+
+      <div class="section">
+        <h2>The target: Var(z) ≈ 1</h2>
+        <p>We want z to stay near zero so sigmoid's gradient is alive (maximum gradient is 0.25 at z=0). Setting Var(z) = Var(x):</p>
+        <div class="formula">n · Var(w) · Var(x) = Var(x)</div>
+        <div class="formula">Var(w) = 1/n = 1/fan_in</div>
+        <p>This is <strong>Xavier initialisation</strong>. For ReLU and sigmoid networks, He initialisation uses 2/n as a conservative factor with extra margin:</p>
+        <div class="formula">
+          <span class="label">He initialisation</span>
+          w ~ N(0, √(2/fan_in))
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>See variance explode or vanish</h2>
+        <div class="interactive">
+          <div class="interactive-title">Variance at layer 1 (fan_in = 784)</div>
+          <div class="slider-row"><label>Weight scale σ_w</label><input type="range" id="var-sw" min="0.001" max="0.2" step="0.001" value="0.01" oninput="updateVar()"><span class="slider-val" id="v-var-sw">0.010</span></div>
+          <div class="output-row">
+            <div class="output-chip"><span class="chip-label">Var(z) ≈ n·σ²_w·0.5</span><span class="chip-val" id="v-varz">0.039</span></div>
+            <div class="output-chip"><span class="chip-label">σ′(z) ≈</span><span class="chip-val" id="v-varp">0.250</span></div>
+          </div>
+          <div style="margin:10px 0 4px;font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase">Gradient health</div>
+          <div class="var-meter"><div class="var-fill" id="var-fill"></div></div>
+          <div id="var-verdict" style="font-size:13px;margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Comparison: your network</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Layer</th><th>fan_in</th><th>Old σ_w</th><th>He σ_w</th><th>Var(z) old</th><th>Var(z) new</th></tr></thead>
+            <tbody>
+              <tr><td class="label-col">784 → 16</td><td>784</td><td class="coral-col">0.010</td><td class="teal-col">0.050</td><td class="coral-col">0.039</td><td class="teal-col">≈ 1.0</td></tr>
+              <tr><td class="label-col">16 → 16</td><td>16</td><td class="coral-col">0.010</td><td class="teal-col">0.354</td><td class="coral-col">0.0008</td><td class="teal-col">≈ 1.0</td></tr>
+              <tr><td class="label-col">16 → 10</td><td>16</td><td class="coral-col">0.010</td><td class="teal-col">0.354</td><td class="coral-col">0.0008</td><td class="teal-col">≈ 1.0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="init-compare">
+          <div class="init-panel bad">
+            <h4>Original (broken)</h4>
+            <div class="code" style="margin:0;font-size:11px">np.random.rand(rows, cols)
+* 0.01</div>
+            <p style="font-size:12px;color:var(--text2);margin-top:8px">Uniform [0,1] — wrong distribution. Scaled too small. Both issues combined.</p>
+          </div>
+          <div class="init-panel good">
+            <h4>Fixed (He init)</h4>
+            <div class="code" style="margin:0;font-size:11px">np.random.randn(rows, cols)
+* np.sqrt(2.0 / fan_in)</div>
+            <p style="font-size:12px;color:var(--text2);margin-top:8px">Normal distribution centred at 0. Scale derived from the variance equation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>All 5 bugs — complete summary</h2>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">①</div><div class="bug-title">Wrong weight distribution + scale</div></div>
+          <div class="bug-body">
+            <div class="bug-before">np.random.rand(rows, cols) * 0.01   ← uniform, too small</div>
+            <div class="bug-after">np.random.randn(rows, cols) * np.sqrt(2.0 / fan_in)   ← He init</div>
+          </div>
+        </div>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">②</div><div class="bug-title">No pixel normalisation</div></div>
+          <div class="bug-body">
+            <div class="bug-before">neurons[0] = np.array(image).flatten().reshape(1, -1)</div>
+            <div class="bug-after">neurons[0] = np.array(image).flatten().reshape(1, -1) / 255.0</div>
+          </div>
+        </div>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">③</div><div class="bug-title">Learning rate too small</div></div>
+          <div class="bug-body">
+            <div class="bug-before">lr = 0.01</div>
+            <div class="bug-after">lr = 0.1</div>
+          </div>
+        </div>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">④</div><div class="bug-title">Only 1 training epoch</div></div>
+          <div class="bug-body">
+            <div class="bug-before">propagate()   ← one pass</div>
+            <div class="bug-after">train(epochs=500)   ← 500 passes</div>
+          </div>
+        </div>
+        <div class="bug-card">
+          <div class="bug-header"><div class="bug-num">⑤</div><div class="bug-title">Delta computed after weight update</div></div>
+          <div class="bug-body">
+            <div class="bug-before">weight_matrix[l] -= lr * dW   ← update first (corrupts delta)</div>
+            <div class="bug-after">delta = ...   ← compute delta first, then update W</div>
+          </div>
+        </div>
+
+        <div class="callout good" style="margin-top:1.5rem"><div class="callout-icon"></div><p>You've now covered everything needed to understand, debug, and improve a neural network from scratch. The path forward: try ReLU activation, cross-entropy loss, mini-batching, and Adam optimiser — each chapter here gives you the foundation to understand why those improvements work.</p></div>
+      </div>
+
+      <div class="ch-nav">
+        <button class="btn btn-ghost" onclick="goTo(7)">← Chapter 7</button>
+        <div class="ch-nav-info">8 / 8</div>
+        <button class="btn btn-primary" onclick="goTo(0)">↺ Start over</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── HELPERS ──────────────────────────────────────────────────────────
+function sig(z) { return 1 / (1 + Math.exp(-z)); }
+function sigp(z) { const s = sig(z); return s * (1 - s); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+// ── NAVIGATION ───────────────────────────────────────────────────────
+let current = 0;
+const TOTAL = 8;
+
+function goTo(n) {
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const ch = parseInt(item.getAttribute('data-ch'));
+    item.classList.toggle('active', ch === n);
+    item.classList.toggle('done', ch < n);
+  });
+  document.getElementById('ch-' + n).classList.add('active');
+  document.getElementById('prog-label').textContent = 'Chapter ' + n + ' of ' + TOTAL;
+  document.getElementById('prog-fill').style.width = (n / TOTAL * 100) + '%';
+  document.getElementById('main-content').scrollTop = 0;
+  current = n;
+  initChapter(n);
+}
+
+function initChapter(n) {
+  if (n === 1) updateNeuron();
+  if (n === 2) { drawSigCurve(); updateSigmoid(); }
+  if (n === 4) updateForward();
+  if (n === 5) { updateOneHot(); updateLoss(); }
+  if (n === 7) updateGD();
+  if (n === 8) updateVar();
+}
+
+// ── CHAPTER 1: NEURON ─────────────────────────────────────────────────
+function updateNeuron() {
+  const x1 = parseFloat(document.getElementById('n-x1').value);
+  const x2 = parseFloat(document.getElementById('n-x2').value);
+  const w1 = parseFloat(document.getElementById('n-w1').value);
+  const w2 = parseFloat(document.getElementById('n-w2').value);
+  const b  = parseFloat(document.getElementById('n-b').value);
+  document.getElementById('v-x1').textContent = x1.toFixed(2);
+  document.getElementById('v-x2').textContent = x2.toFixed(2);
+  document.getElementById('v-w1').textContent = w1.toFixed(2);
+  document.getElementById('v-w2').textContent = w2.toFixed(2);
+  document.getElementById('v-b').textContent  = b.toFixed(2);
+  const z = w1*x1 + w2*x2 + b;
+  document.getElementById('v-z').textContent = z.toFixed(4);
+}
+
+// ── CHAPTER 2: SIGMOID ────────────────────────────────────────────────
+function drawSigCurve() {
+  const svg = document.getElementById('sig-svg');
+  if (!svg) return;
+  let pts = [];
+  for (let z = -6; z <= 6; z += 0.15) {
+    const x = 240 + z * (220/6);
+    const y = 160 - sig(z) * 140;
+    pts.push(x.toFixed(1) + ',' + y.toFixed(1));
+  }
+  document.getElementById('sig-curve').setAttribute('points', pts.join(' '));
+}
+
+function updateSigmoid() {
+  const z = parseFloat(document.getElementById('sig-z').value);
+  document.getElementById('v-sig-z').textContent = z.toFixed(1);
+  const s = sig(z), sp = sigp(z);
+  document.getElementById('v-sig-out').textContent = s.toFixed(4);
+  document.getElementById('v-sig-deriv').textContent = sp.toFixed(4);
+  const x = 240 + z * (220/6);
+  const y = 160 - s * 140;
+  document.getElementById('sig-dot').setAttribute('cx', x.toFixed(1));
+  document.getElementById('sig-dot').setAttribute('cy', y.toFixed(1));
+  const v = document.getElementById('sig-verdict');
+  if (Math.abs(z) > 4) v.textContent = 'Gradient ≈ ' + sp.toFixed(5) + ' — nearly zero. This is the vanishing gradient zone.';
+  else if (Math.abs(z) > 2) v.textContent = 'Gradient starting to shrink. Getting into the saturation zone.';
+  else v.textContent = 'Healthy gradient zone — sigmoid is most sensitive near z = 0.';
+}
+
+// ── CHAPTER 4: FORWARD ────────────────────────────────────────────────
+function updateForward() {
+  const px = parseFloat(document.getElementById('fp-px').value);
+  document.getElementById('v-fp-px').textContent = Math.round(px);
+  const norm = px / 255;
+  const z = norm * 1.5 - 0.5;
+  const a = sig(z);
+  const intensity = v => Math.round(30 + v * 60);
+  const accentAlpha = v => `rgba(167,139,250,${(v * 0.7).toFixed(2)})`;
+  const raw = document.getElementById('fp-raw');
+  raw.textContent = Math.round(px);
+  raw.style.background = `hsl(0,0%,${(100 - px/255*70).toFixed(0)}%)`;
+  raw.style.color = px > 128 ? '#111' : '#eee';
+  const normEl = document.getElementById('fp-norm');
+  normEl.textContent = norm.toFixed(2);
+  normEl.style.background = accentAlpha(norm);
+  normEl.style.borderColor = `rgba(167,139,250,${(0.2+norm*0.6).toFixed(2)})`;
+  normEl.style.color = 'var(--accent)';
+  const zEl = document.getElementById('fp-z');
+  zEl.textContent = z.toFixed(2);
+  zEl.style.background = z > 0 ? 'rgba(251,191,36,0.15)' : 'rgba(45,212,191,0.1)';
+  zEl.style.borderColor = z > 0 ? 'rgba(251,191,36,0.4)' : 'rgba(45,212,191,0.3)';
+  zEl.style.color = z > 0 ? '#fbbf24' : '#2dd4bf';
+  const sEl = document.getElementById('fp-sig');
+  sEl.textContent = a.toFixed(2);
+  sEl.style.background = accentAlpha(a);
+  sEl.style.borderColor = `rgba(167,139,250,${(0.2+a*0.6).toFixed(2)})`;
+  sEl.style.color = 'var(--accent)';
+  const msg = document.getElementById('fp-msg');
+  if (Math.abs(z) > 3) msg.textContent = '⚠ z is large — sigmoid gradient ≈ ' + sigp(z).toFixed(4) + ' (nearly vanished)';
+  else msg.textContent = 'Gradient = ' + sigp(z).toFixed(4) + ' — healthy signal flowing forward';
+}
+
+// ── CHAPTER 5: LOSS ───────────────────────────────────────────────────
+function updateOneHot() {
+  const digit = parseInt(document.getElementById('oh-digit').value);
+  document.getElementById('v-oh-digit').textContent = digit;
+  const grid = document.getElementById('onehot-grid');
+  grid.innerHTML = Array.from({length:10}, (_,i) => `
+    <div class="onehot-cell${i===digit?' hot':''}">
+      <div class="cell-val">${i===digit?'1':'0'}</div>
+      <div class="cell-idx">${i}</div>
+    </div>
+  `).join('');
+}
+
+function updateLoss() {
+  const pred = parseFloat(document.getElementById('ls-pred').value);
+  const trueV = parseFloat(document.getElementById('ls-true').value);
+  document.getElementById('v-ls-pred').textContent = pred.toFixed(2);
+  document.getElementById('v-ls-true').textContent = trueV.toFixed(0);
+  const loss = (pred - trueV) ** 2;
+  const grad = 2 * (pred - trueV);
+  document.getElementById('v-ls-loss').textContent = loss.toFixed(4);
+  document.getElementById('v-ls-grad').textContent = grad.toFixed(4);
+  const msg = document.getElementById('ls-msg');
+  if (Math.abs(pred - trueV) < 0.02) msg.textContent = '✓ Prediction ≈ truth — loss ≈ 0, gradient ≈ 0, no update needed.';
+  else if (pred < trueV) msg.textContent = 'Prediction too low — gradient is negative, so the update will increase A[L].';
+  else msg.textContent = 'Prediction too high — gradient is positive, so the update will decrease A[L].';
+}
+
+// ── CHAPTER 7: GRADIENT DESCENT ──────────────────────────────────────
+function updateGD() {
+  const lr = parseFloat(document.getElementById('gd-lr').value);
+  document.getElementById('v-gd-lr').textContent = lr.toFixed(3);
+  const canvas = document.getElementById('gd-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#22222e';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw loss surface (a simple bowl)
+  const toX = w => W/2 + w * (W/6);
+  const toY = w => H - 20 - w*w * (H-40)/9;
+
+  // Draw filled area under curve
+  ctx.beginPath();
+  ctx.moveTo(toX(-3), H-20);
+  for (let w = -3; w <= 3; w += 0.05) ctx.lineTo(toX(w), toY(w));
+  ctx.lineTo(toX(3), H-20);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(167,139,250,0.04)';
+  ctx.fill();
+
+  // Draw curve
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(167,139,250,0.5)';
+  ctx.lineWidth = 1.5;
+  for (let w = -3; w <= 3; w += 0.05) {
+    const x = toX(w), y = toY(w);
+    if (w === -3) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 5]);
+  ctx.beginPath(); ctx.moveTo(W/2, 10); ctx.lineTo(W/2, H-20); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Simulate gradient descent
+  let w = 2.5;
+  const trail = [w];
+  for (let i = 0; i < 60; i++) {
+    const g = 2 * w; // derivative of w^2
+    w = w - lr * g;
+    trail.push(w);
+    if (Math.abs(w) < 0.001) break;
+  }
+
+  // Draw trail
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(251,191,36,0.6)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < trail.length - 1; i++) {
+    const x1 = toX(trail[i]),   y1 = toY(trail[i]);
+    const x2 = toX(trail[i+1]), y2 = toY(trail[i+1]);
+    ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  }
+  ctx.stroke();
+
+  // Draw dots
+  trail.forEach((wv, i) => {
+    const alpha = i === 0 ? 1 : clamp(1 - i / trail.length * 1.5, 0.1, 0.8);
+    ctx.beginPath();
+    ctx.arc(toX(wv), toY(wv), i === 0 ? 5 : 3, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(251,191,36,${alpha})`;
+    ctx.fill();
+  });
+
+  // Draw final position
+  const finalW = trail[trail.length - 1];
+  ctx.beginPath();
+  ctx.arc(toX(finalW), toY(finalW), 6, 0, Math.PI*2);
+  ctx.fillStyle = '#4ade80';
+  ctx.fill();
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.font = '11px DM Mono, monospace';
+  ctx.fillText('loss', 10, 20);
+  ctx.fillText('weight →', W - 80, H - 5);
+
+  const msg = document.getElementById('gd-msg');
+  const steps = trail.length;
+  if (lr > 0.4) msg.textContent = '⚠ Learning rate too large — overshooting the minimum, may diverge';
+  else if (lr > 0.2) msg.textContent = `Fast convergence in ~${steps} steps — but oscillating slightly`;
+  else if (lr > 0.05) msg.textContent = `Good — converged in ~${steps} steps`;
+  else msg.textContent = `Very slow — converging in ~${steps}+ steps`;
+}
+
+// ── CHAPTER 8: VARIANCE ───────────────────────────────────────────────
+function updateVar() {
+  const sw = parseFloat(document.getElementById('var-sw').value);
+  document.getElementById('v-var-sw').textContent = sw.toFixed(3);
+  const n = 784;
+  const varX = 0.5; // normalised pixels ÷255 have variance ≈ 0.083, using 0.5 for illustration
+  const varZ = n * sw * sw * varX;
+  const zTyp = Math.sqrt(varZ);
+  const sp = sigp(zTyp);
+  document.getElementById('v-varz').textContent = varZ.toFixed(3);
+  document.getElementById('v-varp').textContent = sp.toFixed(4);
+
+  const he = Math.sqrt(2 / n);
+  let health, color, msg;
+  if (sw < he * 0.4) {
+    health = 30; color = '#f87171';
+    msg = '<span style="color:#f87171">⚠ Weights too small — z ≈ 0, but gradients OK. Learning is extremely slow.</span>';
+  } else if (sw < he * 3) {
+    health = Math.round(50 + (sw - he*0.4)/(he*2.6) * 50);
+    color = '#4ade80';
+    msg = '<span style="color:#4ade80">✓ Good range — z has healthy spread, gradient flows well.</span>';
+  } else {
+    health = Math.max(5, Math.round(100 - (sw - he*3)/(he*5)*100));
+    color = '#f87171';
+    msg = '<span style="color:#f87171">⚠ Weights too large — z saturates sigmoid, σ′ ≈ 0. Vanishing gradients.</span>';
+  }
+
+  const fill = document.getElementById('var-fill');
+  fill.style.width = clamp(health, 2, 100) + '%';
+  fill.style.background = color;
+  document.getElementById('var-verdict').innerHTML = msg;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+goTo(0);
+</script>
+</body>
+</html>
